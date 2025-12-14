@@ -1,6 +1,7 @@
 library(shiny)
 
 source("modules/navbarUI.R")
+source("server/server.R")
 
 landingPageUI = fluidPage(
   
@@ -18,11 +19,19 @@ landingPageUI = fluidPage(
     
   ),
   
+  #Navbar component
   navbarUI("mainNavbar", currentPage = "landingPage"),
   
+  #Landing Banner Img
   tags$img(
     src = "BannerLanding.png",  
     class = "w-full h-auto object-cover" 
-  )
+  ),
   
+  #API Fetching of Anime
+  tags$div(class = "overflow-x-auto whitespace-nowrap",
+    uiOutput("animeCards")
+  )
+
 )
+  
