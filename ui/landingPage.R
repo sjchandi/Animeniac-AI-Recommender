@@ -1,6 +1,6 @@
 landingPageUI <- fluidPage(
  
-   # Head with Tailwind + Flowbite
+   # Head with Tailwind + Flowbite CDN
   tags$head(
     tags$script(src = "https://cdn.tailwindcss.com"),
     tags$link(rel = "stylesheet", href = "https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.css"),
@@ -15,7 +15,7 @@ landingPageUI <- fluidPage(
   
   # Navbar and Banner
   navbarUI("mainNavbar", currentPage = "landingPage"),
-  bannerUI("mainBanner"),
+  bannerUI("bannerUI"),
   
   # Anime cards (example)
   tags$div(class = "overflow-x-auto whitespace-nowrap",

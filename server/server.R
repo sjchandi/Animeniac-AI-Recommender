@@ -95,10 +95,10 @@ animeCards <- function(input, output, session) {
     )
   })
   
-  # --- Pagination UI ---
+  # --- Pagination UI --- (IMPROVE)
   output$animePagination <- renderUI({
     tags$div(
-      class = "flex justify-center mt-6 gap-4",  # center horizontally with some spacing
+      class = "flex justify-center mt-6 gap-4", 
       buttonUI("prevBtn", "Back", 3),  # previous button
       buttonUI("nextBtn", "Next", 3)   # next button
     )
@@ -122,20 +122,19 @@ animeCards <- function(input, output, session) {
           print(info)
           cat("==============================\n")
           
-          # Render modal dynamically
+          # Render modal
           output$animeModals <- renderUI({
             animeModalUI(
               id = modal_id,
               title = info$title,
               synopsis = info$synopsis,
               youtube = info$youtube,
-              poster = info$image,
+              poster = info$poster,
               category = info$category,
               airdate = info$airdate
             )
           })
           
-          # Give Shiny a tiny delay to ensure UI is rendered, then trigger modal
           session$sendCustomMessage(
             type = 'showModal',
             message = list(id = modal_id)
