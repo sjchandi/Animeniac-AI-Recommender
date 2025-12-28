@@ -10,8 +10,10 @@ watchlistPageUI <- tagList(
     tags$div(
       class = "flex justify-end mb-5",  
       buttonUI(id = "addButton", text = "Add", size = 10)
-    )
+    ),
     
-    # You can add more page content here, e.g., your table
+    #Table
+    tablelUI("anime_table")
+    
   )
 )

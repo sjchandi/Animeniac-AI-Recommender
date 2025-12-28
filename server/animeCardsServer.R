@@ -1,9 +1,16 @@
 animeCardsServer <- function(id) {
   moduleServer(id, function(input, output, session) {
     offset <- reactiveVal(0)
+    searchTerm <- reactiveVal("")
     
     anime_data <- reactive({
-      fetch_Anime_in_LandingPage(limit = 20, offset = offset())
+      # Fetch from API
+      data <- fetch_Anime_in_LandingPage(
+        limit = 20,
+        offset = offset(),
+        search = searchTerm(),
+        season = selectedSeason()
+      )
     })
     
     # Search filter and categories 
@@ -17,40 +24,59 @@ animeCardsServer <- function(id) {
           # Categories on the left
           tags$div(
             class = "flex gap-2 text-gray-500 text-xl font-medium items-center",
-            lapply(c("All", "Spring", "Summer", "Fall", "Winter"), function(cat) {
+            lapply(c("Spring", "Summer", "Fall", "Winter"), function(cat) {
               tags$span(
-                class = "cursor-pointer hover:text-orange-600 font-semibold",
-                cat,
+                actionLink(
+                  inputId = session$ns(paste0("season_", tolower(cat))),
+                  label = cat,
+                  class = "hover:text-orange-600 font-semibold"
+                ),
                 if(cat != "Winter") tags$span(class = "mx-2 text-gray-500", "|")
               )
             })
           ),
           
           # Search form 
-          tags$form(
-            class = "max-w-md flex items-center",
-            tags$label(
-              `for` = "search",
-              class = "sr-only",
-              "Search"
-            ),
-            tags$div(
-              class = "relative w-full",
-              tags$div(
-                class = "absolute inset-y-0 right-3 pr-2 flex items-center ps-3 pointer-events-none",
-                HTML('<svg class="w-6 h-6 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/></svg>')
+          output$animeSearchUI <- renderUI({
+            tags$form(
+              class = "max-w-md flex items-center",
+              tags$label(
+                `for` = "search",
+                 class = "sr-only",
+                "Search"
               ),
-              tags$input(
-                type = "search",
-                id = "search",
-                class = "block w-full p-3 pl-15 pr-24 border border-gray-500 text-gray-800 text-xl rounded-md hover:border-orange-600 focus:border-orange-600 focus:outline-none shadow-sm placeholder-gray-400",
-                placeholder = "Search",
-                required = TRUE
+              tags$div(
+                class = "relative w-full",
+                tags$div(
+                  class = "absolute inset-y-0 right-3 pr-2 flex items-center ps-3 pointer-events-none",
+                  HTML('<svg class="w-6 h-6 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/></svg>')
+                ),
+                tags$input(
+                  type = "search",
+                  id = session$ns("searchInput"),
+                  class = "block w-full p-3 pl-15 pr-24 border border-gray-500 text-gray-800 text-xl rounded-md hover:border-orange-600 focus:border-orange-600 focus:outline-none shadow-sm placeholder-gray-400",
+                  placeholder = "Search",
+                  value = ""
+                )
               )
             )
-          )
+          })
         )
       )
+    })
+    
+    observeEvent(input$searchInput, {
+      searchTerm(input$searchInput)
+      offset(0)  
+    })
+    
+    selectedSeason <- reactiveVal("summer")  
+    
+    lapply(c("Spring", "Summer", "Fall", "Winter"), function(cat) {
+      observeEvent(input[[paste0("season_", tolower(cat))]], {
+          selectedSeason(tolower(cat))  
+        offset(0)  
+      })
     })
     
     #--Output of anime cards--

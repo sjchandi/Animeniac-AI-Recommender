@@ -1,4 +1,4 @@
-crudModalUI <- function(id, name = "", rating = 1, genre = "", finished = 0) {
+crudModalUI <- function(id, name = "", rating = 1, genre = "", finished = 0 ) {
   ns <- NS(id)
   
   modalDialog(
@@ -6,6 +6,16 @@ crudModalUI <- function(id, name = "", rating = 1, genre = "", finished = 0) {
     easyClose = TRUE,
     footer = NULL,
     size = "l",  # increased modal size
+    
+    #Debugging
+    cat(
+      "id:", id,
+      "| name:", name,
+      "| rating:", rating,
+      "| genre:", genre,
+      "| finished:", finished,
+      "\n"
+    ),
     
     tags$div(
       class = "bg-white rounded-xl p-6 space-y-6",
@@ -41,16 +51,15 @@ crudModalUI <- function(id, name = "", rating = 1, genre = "", finished = 0) {
              focus:border-orange-600 focus:ring-orange-600",
             
             tags$option(value = "", "Select genre"),
-            tags$option("Action"),
-            tags$option("Adventure"),
-            tags$option("Comedy"),
-            tags$option("Drama"),
-            tags$option("Fantasy"),
-            tags$option("Romance"),
-            tags$option("Sci-Fi"),
-            tags$option("Slice of Life"),
-            tags$option("Thriller"),
-            selected = genre
+            tags$option(value = "Action", "Action"),
+            tags$option(value = "Adventure", "Adventure"),
+            tags$option(value = "Comedy", "Comedy"),
+            tags$option(value = "Drama", "Drama"),
+            tags$option(value = "Fantasy", "Fantasy"),
+            tags$option(value = "Romance", "Romance"),
+            tags$option(value = "Sci-Fi", "Sci-Fi"),
+            tags$option(value = "Slice of Life", "Slice of Life"),
+            tags$option(value = "Thriller", "Thriller"),
           )
         ),
         column(
@@ -58,13 +67,13 @@ crudModalUI <- function(id, name = "", rating = 1, genre = "", finished = 0) {
           tags$label("Finished Watching?", class = "block text-xl font-medium text-gray-700"),
           tags$select(
             id = ns("finished"),
+            value = finished,
             class = "mt-1 block w-full rounded-md border border-gray-400 
              bg-white px-3 py-2 text-gray-500 shadow-sm
              focus:border-orange-600 focus:ring-orange-600",
             
             tags$option(value = 0, "No"),
             tags$option(value = 1, "Yes"),
-            selected = finished
           )
         )
       ),
@@ -97,16 +106,27 @@ crudModalUI <- function(id, name = "", rating = 1, genre = "", finished = 0) {
       
       # Buttons
       tags$div(
-        class = "flex justify-end gap-3 pt-4",
+        class = if (id == "editModal") "flex justify-between gap-3 pt-4" else "flex justify-end gap-3 pt-4",
         
-        modalButton("Cancel"),
+        # Delete Button (only for editModal)
+        if (id == "editModal") {
+          actionButton(
+            inputId = ns("deleteData"),
+            label = "Delete",
+            class = "px-5 py-2 rounded-md bg-red-600 text-white hover:bg-red-700"
+          )
+        },
         
-        actionButton(
-          inputId = ns("submitModal"),
-          label = ifelse(id == "addModal", "Add Anime", "Save Changes"),
-          class = "px-5 py-2 rounded-md bg-orange-600 text-white hover:bg-orange-700"
+        tags$div(
+          
+          modalButton("Cancel"),
+          
+          actionButton(
+            inputId = ns("submitModal"),
+            label = ifelse(id == "addModal", "Add Anime", "Save Changes"),
+            class = "px-5 py-2 rounded-md bg-orange-600 text-white hover:bg-orange-700"
+          )
         ),
-        
       ),
       
       tags$script(HTML(sprintf("

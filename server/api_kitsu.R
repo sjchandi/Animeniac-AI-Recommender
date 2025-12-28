@@ -1,9 +1,4 @@
-library(httr2)
-library(jsonlite)
-
-#Fetching of API data 
-
-fetch_Anime_in_LandingPage = function(limit = 10, offset = 0){
+fetch_Anime_in_LandingPage <- function(limit = 10, offset = 0, search = NULL, season = "summer") {
   
   url <- paste0(
     "https://kitsu.io/api/edge/anime?",
@@ -11,6 +6,14 @@ fetch_Anime_in_LandingPage = function(limit = 10, offset = 0){
     "&page[offset]=", offset,
     "&include=genres"
   )
+  
+  if (!is.null(search) && nchar(search) > 0) {
+    url <- paste0(url, "&filter[text]=", URLencode(search))
+  }
+  
+  if (!is.null(season) && season %in% c("winter", "spring", "summer", "fall")) {
+    url <- paste0(url, "&filter[season]=", URLencode(season))
+  }
   
   # Make request
   resp <- request(url) %>% req_perform()
@@ -42,39 +45,4 @@ fetch_Anime_in_LandingPage = function(limit = 10, offset = 0){
   })
   
   do.call(rbind, result)
-
 }
-
-
-#Will fetch the info of selected anime 
-fetch_Anime_Info <- function(id){
-  
-  url <- paste0("https://kitsu.io/api/edge/anime/", id, "?include=genres")
-  
-  resp <- request(url) %>% req_perform()
-  data_json <- resp %>% resp_body_json(simplifyVector = FALSE)
-  
-  anime_attr <- data_json$data$attributes
-  
-  # Helper to safely extract values
-  safe <- function(x) if (is.null(x) || length(x) == 0) NA else x
-  
-  # Extract genres safely
-  genre_names <- NA
-  if (!is.null(data_json$included) && length(data_json$included) > 0) {
-    genre_names <- sapply(data_json$included, function(x) x$attributes$name)
-    genre_names <- paste(genre_names, collapse = ", ")
-  }
-  
-  data.frame(
-    id = safe(id),
-    title = safe(anime_attr$canonicalTitle),
-    synopsis = safe(anime_attr$synopsis),
-    youtube = safe(anime_attr$youtubeVideoId),
-    poster = safe(anime_attr$posterImage$large),
-    category = safe(genre_names),
-    airdate = safe(anime_attr$startDate),
-    stringsAsFactors = FALSE
-  )
-}
-

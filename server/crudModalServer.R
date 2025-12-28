@@ -1,7 +1,3 @@
-library(DBI)
-library(glue)
-library(shiny)
-
 crudModalServer <- function(id, con) {
   moduleServer(id, function(input, output, session) {
     

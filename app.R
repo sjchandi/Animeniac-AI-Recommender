@@ -2,6 +2,9 @@ library(shiny)
 library(shinyjs)
 library(DBI)
 library(RMySQL) 
+library(glue)
+library(DT)
+library(reactable)
 
 
 source("modules/navbarUI.R")
@@ -10,7 +13,9 @@ source("modules/bannerUI.R")
 source("modules/buttonUI.R")
 source("modules/animeCardsUI.R")
 source("modules/crudModalUI.R")
+source("modules/tableUI.R")
 
+source("ui/loginPage.R")
 source("ui/landingPage.R")
 source("ui/watchlistPage.R")
 
@@ -19,6 +24,7 @@ source("server/navbarServer.R")
 source("server/server.R")   
 source("server/api_kitsu.R") 
 source("server/crudModalServer.R") 
+source("server/tableServer.R") 
 
 ui <- fluidPage(
   useShinyjs(),
