@@ -1,8 +1,8 @@
-tableServer <- function(id, con, current_edit) {
+tableServer <- function(id, con, current_edit, anime_data) {
   moduleServer(id, function(input, output, session) {
-    
+  
     output$anime_table <- renderReactable({
-      data <- DBI::dbGetQuery(con, "SELECT * FROM anime_watchlist")
+      data <- anime_data() 
       
       data$action <- NA
       
@@ -35,7 +35,7 @@ tableServer <- function(id, con, current_edit) {
                 onclick = sprintf(
                   "Shiny.setInputValue('%s', %d, {priority: 'event'})",
                   session$ns("edit_row"),
-                  data$id[index]  # database ID
+                  data$id[index]
                 )
               )
             }
@@ -46,7 +46,7 @@ tableServer <- function(id, con, current_edit) {
         bordered = TRUE,
         defaultPageSize = 10
       )
-    })
+    }) 
     
     observeEvent(input$edit_row, {
       row_id <- input$edit_row
@@ -70,5 +70,6 @@ tableServer <- function(id, con, current_edit) {
       )
     })
     
-  })
-}
+    
+  })  
+}  

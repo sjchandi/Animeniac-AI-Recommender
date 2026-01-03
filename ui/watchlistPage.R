@@ -9,8 +9,8 @@ watchlistPageUI <- tagList(
     # Button
     tags$div(
       class = "flex justify-between mb-5",  
-      buttonUI(id = "addButton", text = "Add", size = 10),
-      buttonUI(id = "generate_recommendation", text = "Suggest Recommendation?", size = 10)
+      buttonUI(id = "generate_recommendation", text = "Need Recommendations?", size = 10),
+      buttonUI(id = "addButton", text = "Add", size = 10)
     ),
     
     #Table

@@ -155,8 +155,6 @@ animeCardsServer <- function(id) {
   
             info <- fetch_Anime_Info(id)
             
-            #cat("YouTube ID:", info$youtube, "\n") 
-            
             output$animeModals <- renderUI({
               animeModalUI(
                 id = modal_id,

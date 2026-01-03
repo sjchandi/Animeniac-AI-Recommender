@@ -71,22 +71,25 @@ server <- function(input, output, session) {
   observeEvent(input$nav_home, { currentPage("landingPage") })
   observeEvent(input$nav_watchlist, { currentPage("watchlistPage") })
   
+  #Anime Data
+  anime_data <- reactiveVal(DBI::dbGetQuery(con, "SELECT * FROM anime_watchlist"))
+  
   # Open Add modal
   observeEvent(input$addButton, {
     showModal(crudModalUI("addModal"))
   })
   
   # Initialize CRUD module
-  crudModalAddServer("addModal", con)
-
+  crudModalAddServer("addModal", con, anime_data = anime_data)
+  
   # Track the current record being edited
   current_edit <- reactiveVal(NULL)
   
   # Initialize Edit modal module once
-  crudModalEditServer("editModal", con, record_id = current_edit)
+  crudModalEditServer("editModal", con, record_id = current_edit, anime_data = anime_data)
   
   # Initialize table module
-  tableServer("anime_table", con, current_edit)
+  tableServer("anime_table", con, current_edit, anime_data = anime_data)
   
   # Render anime cards
   animeCardsServer("anime")
@@ -120,18 +123,29 @@ server <- function(input, output, session) {
     # Loading modal
     showModal(
       modalDialog(
-        "Recommending anime...",
+        tags$div(
+          "Recommending anime...",
+          class = "text-center text-orange-600 font-semibold"
+        ),
         footer = NULL,
         easyClose = FALSE
       )
     )
+    
     
     tryCatch({
       ai_text <- aiGeminiResponse(input$anime_watchlist)
     
       showModal(
         modalDialog(
-          title = "🎌 Anime Recommendations",
+
+          title = NULL,
+          
+          # Title
+          tags$h2(
+            class = "text-3xl font-semibold text-gray-800 text-center mb-1",
+            "🎌 Anime Recommendations"
+          ),
           tags$pre(
             style = "white-space: pre-wrap; font-size: 16px;",
             ai_text

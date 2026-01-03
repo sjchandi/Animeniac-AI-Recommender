@@ -1,5 +1,5 @@
 aiGeminiResponse <- function(anime_watchlist) {
-  api_key <- "AIzaSyBHNmpY5Bp6ISt65Be0YqCFjVq7rUoA8FE"
+  api_key <- Sys.getenv("GOOGLE_API_KEY")
   
   url <- "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent"
   

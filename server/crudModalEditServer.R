@@ -1,16 +1,21 @@
-crudModalEditServer <- function(id, con, record_id) {
+crudModalEditServer <- function(id, con, record_id, anime_data ) {
   moduleServer(id, function(input, output, session) {
     
     observeEvent(input$submitEdit, {
-      cat("Editing record ID:", record_id(), "\n")
-      
+    
       anime_name <- input$name
       anime_rating <- as.integer(input$rating_value)
       anime_genre <- input$genre
       anime_finished <- as.integer(input$finished)
       
-      if (anime_name == "" || anime_genre == "") {
-        showNotification("Please fill all fields!", type = "error")
+      # Validation
+      if (anime_name == "") {
+        showNotification("Please enter anime name!", type = "error")
+        return()
+      }
+      
+      if (anime_genre == "") {
+        showNotification("Please select a genre!", type = "error")
         return()
       }
       
@@ -25,8 +30,8 @@ crudModalEditServer <- function(id, con, record_id) {
       )
       
       DBI::dbExecute(con, sql)
+      anime_data(DBI::dbGetQuery(con, "SELECT * FROM anime_watchlist"))
       removeModal()
-      table_refresh(table_refresh() + 1)
       showNotification("Anime updated successfully!", type = "message")
     })
     
@@ -53,7 +58,8 @@ crudModalEditServer <- function(id, con, record_id) {
         .con = con
       )
       DBI::dbExecute(con, sql)
-      removeModal()  # close confirmation and edit modal
+      removeModal()
+      anime_data(DBI::dbGetQuery(con, "SELECT * FROM anime_watchlist"))
       showNotification("Anime deleted successfully!", type = "message")
     })
     
