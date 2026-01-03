@@ -1,4 +1,4 @@
-crudModalServer <- function(id, con) {
+crudModalAddServer <- function(id, con) {
   moduleServer(id, function(input, output, session) {
     
     observeEvent(input$submitModal, {
@@ -28,7 +28,6 @@ crudModalServer <- function(id, con) {
       )
       
       DBI::dbExecute(con, sql)
-      
       removeModal()
       showNotification("Anime added successfully!", type = "message")
       

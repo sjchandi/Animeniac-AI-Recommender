@@ -77,13 +77,79 @@ server <- function(input, output, session) {
   })
   
   # Initialize CRUD module
-  crudModalServer("addModal", con)
+  crudModalAddServer("addModal", con)
+
+  # Track the current record being edited
+  current_edit <- reactiveVal(NULL)
+  
+  # Initialize Edit modal module once
+  crudModalEditServer("editModal", con, record_id = current_edit)
   
   # Initialize table module
-  tableServer("anime_table", con)
+  tableServer("anime_table", con, current_edit)
   
   # Render anime cards
   animeCardsServer("anime")
+  
+  #Response Generation
+  observeEvent(input$generate_recommendation, {
+    
+    watchlist_df <- dbGetQuery(con, "SELECT name FROM anime_watchlist")
+    
+    if (nrow(watchlist_df) == 0) {
+      showNotification(
+        "The watchlist table is empty. Add some anime first.",
+        type = "warning"
+      )
+      return()  # Stop further processing
+    }
+    
+    anime_watchlist <- paste(watchlist_df$title, collapse = ", ")
+    
+    
+    if (nrow(watchlist_df) == 0) {
+      showNotification(
+        "Your watchlist is empty. Add anime first.",
+        type = "warning"
+      )
+      return()
+    }
+    
+    anime_watchlist <- paste(watchlist_df$title, collapse = ", ")
+    
+    # Loading modal
+    showModal(
+      modalDialog(
+        "Recommending anime...",
+        footer = NULL,
+        easyClose = FALSE
+      )
+    )
+    
+    tryCatch({
+      ai_text <- aiGeminiResponse(input$anime_watchlist)
+    
+      showModal(
+        modalDialog(
+          title = "🎌 Anime Recommendations",
+          tags$pre(
+            style = "white-space: pre-wrap; font-size: 16px;",
+            ai_text
+          ),
+          footer = modalButton("Close"),
+          easyClose = TRUE
+        )
+      )
+      
+    }, error = function(e) {
+      removeModal()
+      showNotification(
+        paste("API Error:", e$message),
+        type = "error"
+      )
+    })
+  })
+  
   
   # Disconnect DB on session end
   session$onSessionEnded(function() { DBI::dbDisconnect(con) })

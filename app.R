@@ -5,7 +5,7 @@ library(RMySQL)
 library(glue)
 library(DT)
 library(reactable)
-
+library(httr2)
 
 source("modules/navbarUI.R")
 source("modules/animeModalUI.R")
@@ -13,6 +13,7 @@ source("modules/bannerUI.R")
 source("modules/buttonUI.R")
 source("modules/animeCardsUI.R")
 source("modules/crudModalUI.R")
+source("modules/crudModalEditUI.R")
 source("modules/tableUI.R")
 
 source("ui/loginPage.R")
@@ -23,8 +24,10 @@ source("server/animeCardsServer.R")
 source("server/navbarServer.R")   
 source("server/server.R")   
 source("server/api_kitsu.R") 
-source("server/crudModalServer.R") 
+source("server/crudModalAddServer.R") 
 source("server/tableServer.R") 
+source("server/crudModalEditServer.R")
+source("server/api_Gemini.R")
 
 ui <- fluidPage(
   useShinyjs(),

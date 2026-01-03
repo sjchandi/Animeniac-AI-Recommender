@@ -2,6 +2,7 @@ animeCardsServer <- function(id) {
   moduleServer(id, function(input, output, session) {
     offset <- reactiveVal(0)
     searchTerm <- reactiveVal("")
+    selectedSeason <- reactiveVal("summer")  
     
     anime_data <- reactive({
       # Fetch from API
@@ -70,7 +71,7 @@ animeCardsServer <- function(id) {
       offset(0)  
     })
     
-    selectedSeason <- reactiveVal("summer")  
+    
     
     lapply(c("Spring", "Summer", "Fall", "Winter"), function(cat) {
       observeEvent(input[[paste0("season_", tolower(cat))]], {
@@ -177,8 +178,16 @@ animeCardsServer <- function(id) {
       })
     })
     
+    firstNextClick <- reactiveVal(TRUE)
     
-    observeEvent(input$nextBtn, { offset(offset() + 20) })
+    observeEvent(input$nextBtn, {
+      if (firstNextClick()) {
+        offset(40)
+        firstNextClick(FALSE)
+      } else {
+        offset(offset() + 20)
+      }
+    })
     
     
     observeEvent(input$prevBtn, { offset(max(offset() - 20, 0)) })
