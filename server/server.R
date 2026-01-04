@@ -7,8 +7,19 @@ server <- function(input, output, session) {
     host = Sys.getenv("DB_HOST"),
     port = as.integer(Sys.getenv("DB_PORT")),
     user = Sys.getenv("DB_USER"),
-    password = Sys.getenv("DB_PASS")
+    password = Sys.getenv("DB_PASS"),
+    sslmode = "require"
   )
+  
+  dbExecute(con, "
+  CREATE TABLE IF NOT EXISTS anime_watchlist (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      rating INT,
+      genre VARCHAR(100),
+      finished BOOLEAN DEFAULT FALSE
+  );
+  ")
   
   # Track current page: NULL = loading
   currentPage <- reactiveVal(NULL)
