@@ -69,48 +69,48 @@ fetch_Anime_in_LandingPage <- function(limit = 10, offset = 0, search = NULL, se
 
 fetch_Anime_Info <- function(id) {
   url <- paste0("https://kitsu.io/api/edge/anime/", id, "?include=genres")
-  
   resp <- request(url) %>% req_perform()
   data_json <- resp %>% resp_body_json(simplifyVector = FALSE)
   
   if (is.null(data_json$data)) {
     return(list(
-      title = NA,
-      synopsis = NA,
-      youtube = NA,
-      poster = "NoPoster.png",
-      category = NA,
-      airdate = NA
+      title = NA, synopsis = NA, youtube = NA,
+      poster = "NoPoster.png", category = NA, airdate = NA
     ))
   }
   
   x <- data_json$data
   attr <- x$attributes
+  included_genres <- data_json$included
   
-  # Safe genres
+  # Safe helper
+  safe_string <- function(x) {
+    if (!is.null(x) && !is.na(x) && nzchar(x)) x else ""
+  }
+  
+  # Genres
   genre_names <- NA
   if (!is.null(x$relationships$genres$data) && length(x$relationships$genres$data) > 0) {
     genre_ids <- sapply(x$relationships$genres$data, function(g) if(!is.null(g$id)) g$id else NA)
-    included_genres <- data_json$included
     if (!is.null(included_genres)) {
       genre_map <- setNames(
-        sapply(included_genres, function(g) if(!is.null(g$attributes$name)) g$attributes$name else NA),
+        sapply(included_genres, function(g) safe_string(g$attributes$name)),
         sapply(included_genres, function(g) g$id)
       )
       genre_names <- paste(genre_map[genre_ids], collapse = ", ")
     }
   }
   
-  # Safe poster
-  poster <- if (!is.null(attr$posterImage) && !is.null(attr$posterImage$medium)) attr$posterImage$medium else "NoPoster.png"
+  # Poster
+  poster <- if (!is.null(attr$posterImage$medium)) attr$posterImage$medium else "NoPoster.png"
   
   # Return safe list
   list(
-    title = if (!is.null(attr$canonicalTitle)) attr$canonicalTitle else NA,
-    synopsis = if (!is.null(attr$synopsis)) attr$synopsis else NA,
-    youtube = if (!is.null(attr$youtubeVideoId)) attr$youtubeVideoId else NA,
+    title = safe_string(attr$canonicalTitle),
+    synopsis = safe_string(attr$synopsis),
+    youtube = safe_string(attr$youtubeVideoId),
     poster = poster,
     category = genre_names,
-    airdate = if (!is.null(attr$startDate)) attr$startDate else NA
+    airdate = safe_string(attr$startDate)
   )
 }

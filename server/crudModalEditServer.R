@@ -6,7 +6,7 @@ crudModalEditServer <- function(id, con, record_id, anime_data ) {
       anime_name <- input$name
       anime_rating <- as.integer(input$rating_value)
       anime_genre <- input$genre
-      anime_finished <- as.integer(input$finished)
+      anime_finished <- input$finished
       
       # Validation
       if (anime_name == "") {

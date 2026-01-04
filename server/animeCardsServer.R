@@ -148,16 +148,11 @@ animeCardsServer <- function(id) {
         anime_id <- data$id[i]
         local({
           id <- anime_id
-          modal_id <- paste0("popup-modal-", id)
-          
           observeEvent(input[[paste0("anime_", id)]], {
-            modal_id <- paste0("popup-modal-", id)
-  
             info <- fetch_Anime_Info(id)
             
-            output$animeModals <- renderUI({
+            showModal(
               animeModalUI(
-                id = modal_id,
                 title = info$title,
                 synopsis = info$synopsis,
                 youtube = info$youtube,
@@ -165,16 +160,12 @@ animeCardsServer <- function(id) {
                 category = info$category,
                 airdate = info$airdate
               )
-            })
-            
-            session$sendCustomMessage(
-              type = 'showModal',
-              message = list(id = modal_id)
             )
           }, ignoreInit = TRUE)
         })
       })
     })
+    
     
     firstNextClick <- reactiveVal(TRUE)
     

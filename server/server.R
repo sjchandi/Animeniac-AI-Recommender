@@ -2,7 +2,7 @@ server <- function(input, output, session) {
   
   # DB connection
   con <- dbConnect(
-    MariaDB(),
+    RPostgres::Postgres(),
     dbname = Sys.getenv("DB_NAME"),
     host = Sys.getenv("DB_HOST"),
     port = as.integer(Sys.getenv("DB_PORT")),

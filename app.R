@@ -1,7 +1,7 @@
 library(shiny)
 library(shinyjs)
 library(DBI)
-library(RMariaDB)
+library(RPostgres)
 library(glue)
 library(DT)
 library(reactable)

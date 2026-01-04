@@ -4,6 +4,18 @@ tableServer <- function(id, con, current_edit, anime_data) {
     output$anime_table <- renderReactable({
       data <- anime_data() 
       
+      if (nrow(data) == 0) {
+        data <- data.frame(
+          id = integer(0),
+          name = character(0),
+          genre = character(0),
+          finished = integer(0),
+          rating = integer(0),
+          stringsAsFactors = FALSE
+        )
+      }
+      
+      
       data$action <- NA
       
       reactable(

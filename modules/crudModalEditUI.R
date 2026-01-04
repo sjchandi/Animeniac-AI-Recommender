@@ -1,4 +1,4 @@
-editModalUI <- function(id, name = "", rating = 1, genre = "", finished = 0) {
+editModalUI <- function(id, name = "", rating = 1, genre = "", finished = FALSE) {
   ns <- NS(id)
   
   modalDialog(
@@ -60,7 +60,7 @@ editModalUI <- function(id, name = "", rating = 1, genre = "", finished = 0) {
           selectInput(
             ns("finished"),
             label = NULL,
-            choices = c("No" = 0, "Yes" = 1),
+            choices = c("No" = FALSE, "Yes" = TRUE),
             selected = finished,
             width = "100%"
           )
