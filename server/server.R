@@ -2,12 +2,12 @@ server <- function(input, output, session) {
   
   # DB connection
   con <- dbConnect(
-    MySQL(),
-    dbname = "animeniac",
-    host = "localhost",
-    port = 3306,
-    user = "root",
-    password = ""
+    MariaDB(),
+    dbname = Sys.getenv("DB_NAME"),
+    host = Sys.getenv("DB_HOST"),
+    port = as.integer(Sys.getenv("DB_PORT")),
+    user = Sys.getenv("DB_USER"),
+    password = Sys.getenv("DB_PASS")
   )
   
   # Track current page: NULL = loading
