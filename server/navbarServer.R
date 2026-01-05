@@ -32,5 +32,6 @@ navbarServer <- function(id) {
     # Navigation logic
     observeEvent(input$nav_home, { currentPage("landingPage") })
     observeEvent(input$nav_watchlist, { currentPage("watchlistPage") })
+    
   })
 }

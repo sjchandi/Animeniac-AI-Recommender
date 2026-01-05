@@ -7,8 +7,7 @@ server <- function(input, output, session) {
     host = Sys.getenv("DB_HOST"),
     port = as.integer(Sys.getenv("DB_PORT")),
     user = Sys.getenv("DB_USER"),
-    password = Sys.getenv("DB_PASS"),
-    sslmode = "require"
+    password = Sys.getenv("DB_PASS")
   )
   
   dbExecute(con, "
@@ -59,8 +58,24 @@ server <- function(input, output, session) {
   
   # Handle logout
   observeEvent(input$logoutBtn, {
+    removeModal()
     runjs("localStorage.removeItem('loggedIn');")
     currentPage("loginPage")
+    showNotification("Goodbye :<", type = "message")
+  })
+  
+  observeEvent(input$logoutConfirm, {
+    showModal(
+      modalDialog(
+        title = "Logout?",
+        "Are you sure you want Logout?",
+        easyClose = TRUE,
+        footer = tagList(
+          modalButton("Cancel"),
+          actionButton("logoutBtn", "Logout", class = "px-5 py-2 rounded-md bg-orange-600 text-white hover:bg-orange-700")
+        )
+      )
+    )
   })
   
   # Render UI (single renderUI)
@@ -134,9 +149,10 @@ server <- function(input, output, session) {
     # Loading modal
     showModal(
       modalDialog(
-        tags$div(
-          "Recommending anime...",
-          class = "text-center text-orange-600 font-semibold"
+        tags$img(
+          src = "loadingAi.png",
+          class = "d-block mx-auto",  
+          style = "width: 300px; height: auto;"  
         ),
         footer = NULL,
         easyClose = FALSE
