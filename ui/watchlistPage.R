@@ -14,6 +14,6 @@ watchlistPageUI <- tagList(
     ),
     
     #Table
-    tablelUI("anime_table"),
+    tablelUI("anime_table")
   )
 )
