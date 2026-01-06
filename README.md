@@ -20,3 +20,4 @@ The app integrates **Kitsu API** and **Gemini API**, providing a Crunchyroll-lik
 - **Gemini API**  
 - **Tailwind CSS**  
 - **JavaScript**
+- **PostgresSQL**
