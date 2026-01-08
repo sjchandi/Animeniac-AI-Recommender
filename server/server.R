@@ -165,22 +165,38 @@ server <- function(input, output, session) {
     
       showModal(
         modalDialog(
-
           title = NULL,
           
           # Title
           tags$h2(
-            class = "text-3xl font-semibold text-gray-800 text-center mb-1",
+            class = "text-3xl font-semibold text-orange-600 text-center mb-4",
             "🎌 Anime Recommendations"
           ),
-          tags$pre(
-            style = "white-space: pre-wrap; font-size: 16px;",
-            ai_text
+          
+          # Box container
+          tags$div(
+            style = "
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background-color: #ffffff;
+            padding: 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            max-height: 70vh;
+            overflow-y: auto;
+          ",
+            
+            tags$div(
+              style = "font-size: 1.5rem; line-height: 1.8;",
+              HTML(markdown::markdownToHTML(text = ai_text, fragment.only = TRUE))
+            )
           ),
+          
           footer = modalButton("Close"),
-          easyClose = TRUE
+          easyClose = TRUE,
+          size = "l"
         )
       )
+      
       
     }, error = function(e) {
       removeModal()

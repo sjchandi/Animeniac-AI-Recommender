@@ -7,13 +7,13 @@ aiGeminiResponse <- function(anime_watchlist) {
     "You are an anime recommendation assistant.\n\n",
     "Based on this anime watchlist:\n",
     anime_watchlist, "\n\n",
-    "Recommend EXACTLY 3 anime titles.\n",
+    "Recommend EXACTLY 5 anime titles.\n",
     "RULES:\n",
     "- Only list anime titles followed by a one-sentence plot summary\n",
-    "- Format: Anime Name – Plot summary\n",
-    "- Number them 1 to 3\n",
+    "- Format: **Anime Name** – Plot summary\n",
+    "- Number them 1 to 5\n",
     "- Do not include extra explanations\n",
-    "- Start the response with: 'Based on your anime list, we recommend:'\n"
+    "- Start the response with: 'Based on your anime list, we recommend:' followed by a blank line\n"
   )
   
   resp <- httr2::request(url) %>%
