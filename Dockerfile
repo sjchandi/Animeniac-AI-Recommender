@@ -11,17 +11,7 @@ COPY . /srv/shiny-server/
 
 WORKDIR /srv/shiny-server/
 
-RUN R -e "install.packages(c(
-  'shiny',
-  'shinyjs',
-  'DBI',
-  'RPostgres',
-  'glue',
-  'DT',
-  'reactable',
-  'httr2',
-  'commonmark'
-))"
+RUN R -e "install.packages(c('shiny','shinyjs','DBI','RPostgres','glue','DT','reactable','httr2', 'commonmark'))"
 
 EXPOSE 3838
 
