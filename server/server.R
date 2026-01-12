@@ -187,7 +187,7 @@ server <- function(input, output, session) {
             
             tags$div(
               style = "font-size: 1.5rem; line-height: 1.8;",
-              HTML(markdown::markdownToHTML(text = ai_text, fragment.only = TRUE))
+              HTML(commonmark::markdown_html(ai_text))  
             )
           ),
           
