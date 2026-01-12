@@ -6,6 +6,7 @@ library(glue)
 library(DT)
 library(reactable)
 library(httr2)
+library(markdown)
 
 source("modules/navbarUI.R")
 source("modules/animeModalUI.R")
